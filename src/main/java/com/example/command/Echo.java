@@ -1,15 +1,24 @@
 package com.example.command;
 
-public class Echo implements Executable {
+import com.example.utils.ExecutionResult;
+
+public class Echo extends Command {
     private String message;
+
+    public Echo(String[] arguments) {
+        this(String.join(" ", arguments));
+    }
 
     public Echo(String message) {
         this.message = message;
     }
 
-    public boolean execute() {
-        System.out.println(message);
-        return true;
+    public ExecutionResult execute() {
+        return new ExecutionResult(true, message);
+    }
+
+    @Override
+    public void putArgs(String args) {
     }
     
 }

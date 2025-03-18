@@ -2,29 +2,33 @@ package com.example;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
-import com.example.command.Echo;
+import com.example.command.Command;
+import com.example.utils.ExecutionResult;
+import com.example.utils.ExitExeption;
 
 
 public class Bash {
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String name = "";
         while (true) {
-            System.out.printf("|%s|%s> ", name, Date.from(Instant.now()));
+            System.out.printf("|> ", name, Date.from(Instant.now()));
             String command = sc.nextLine();
-            if (command.equals("exit")) {
+            List<Command> commands = Parser.parse(command);
+            ExecutionResult res = null;
+            try {
+                res = ExecutePool.execute(commands);
+            } catch (ExitExeption e) {
                 break;
             }
-            if (command.startsWith("setname ")) {
-                name = command.substring(8);
-                continue;
-            }
-            if (command.startsWith("echo ")) {
-                Echo echo = new Echo(command.substring(5));
-                echo.execute();
-                continue;
+            if (!res.isSuccess()) {
+                System.out.println(res.getError());
+            }else {
+                System.out.println(res.getOutput() + (res.getError().length() != 0? "\n" + res.getError(): ""));
             }
         }
         sc.close();
