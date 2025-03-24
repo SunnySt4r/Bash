@@ -1,3 +1,9 @@
-
-/target
+.idea/
+.gradle/
+.build/
+.output/
+*/build/
+build/
+out/
+target/
 .vscode
