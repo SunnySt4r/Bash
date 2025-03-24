@@ -14,6 +14,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
+    <checkstyle.config.location>config/checkstyle/checkstyle.xml</checkstyle.config.location>
   </properties>
 
   <dependencies>
@@ -49,6 +50,55 @@
             <phase>package</phase>
             <goals>
               <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>10.3.1</version>
+          </dependency>
+          <dependency>
+            <groupId>com.thomasjensen.checkstyle.addons</groupId>
+            <artifactId>checkstyle-addons</artifactId>
+            <version>6.0.1</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <consoleOutput>true</consoleOutput>
+          <violationSeverity>warning</violationSeverity>
+          <failOnViolation>false</failOnViolation>
+          <failsOnError>true</failsOnError>
+          <linkXRef>false</linkXRef>
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          <sourceDirectories>
+            <directory>${project.build.sourceDirectory}</directory>
+            <directory>${project.build.testSourceDirectory}</directory>
+          </sourceDirectories>
+<!--          <checkstyleRules>-->
+<!--            <configLocation>config/checkstyle/checkstyle.xml</configLocation>-->
+<!--          </checkstyleRules>-->
+        </configuration>
+        <executions>
+          <execution>
+            <id>check</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>checkstyle-report</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>checkstyle</goal>
             </goals>
           </execution>
         </executions>
