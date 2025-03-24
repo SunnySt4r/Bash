@@ -8,6 +8,7 @@ import java.util.Scanner;
 import com.example.command.Command;
 import com.example.utils.ExecutionResult;
 import com.example.utils.ExitExeption;
+import com.example.utils.WrongCommandExeption;
 
 
 public class Bash {
@@ -18,7 +19,13 @@ public class Bash {
         while (true) {
             System.out.printf("|> ", name, Date.from(Instant.now()));
             String command = sc.nextLine();
-            List<Command> commands = Parser.parse(command);
+            List<Command> commands = null;
+            try {
+                Parser.parse(command);
+            } catch (WrongCommandExeption e) {
+                System.out.println(e.getMessage());
+                continue;
+            }
             ExecutionResult res = null;
             try {
                 res = ExecutePool.execute(commands);

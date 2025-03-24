@@ -5,9 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 import com.example.command.Command;
 import com.example.command.CommandFactory;
+import com.example.utils.WrongCommandExeption;
 
 public class Parser {
-    public static List<Command> parse(String input) {
+    public static List<Command> parse(String input) throws WrongCommandExeption{
         List<Command> commands = new ArrayList<>();
         String[] lines = input.split(" *\\| *");
         for (String line : lines) {
