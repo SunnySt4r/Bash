@@ -29,6 +29,38 @@ public class Grep extends Command {
         parseArguments();
     }
 
+    public boolean isIgnoreCase() {
+        return ignoreCase;
+    }
+
+    public boolean isCountOnly() {
+        return countOnly;
+    }
+
+    public boolean isFileNamesOnly() {
+        return fileNamesOnly;
+    }
+
+    public boolean isWholeWord() {
+        return wholeWord;
+    }
+
+    public int getAfterContext() {
+        return afterContext;
+    }
+
+    public String getPattern() {
+        return pattern;
+    }
+
+    public List<String> getFiles() {
+        return new ArrayList<>(files);
+    }
+
+    public String getExceptionMessage() {
+        return exceptionMessage;
+    }
+
     private void parseArguments() {
         if (arguments == null || arguments.length == 0) {
             return;
