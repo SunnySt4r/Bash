@@ -1,14 +1,14 @@
 package com.example.command;
 
 import com.example.utils.ExecutionResult;
-import com.example.utils.ExitExeption;
 
 import java.io.IOException;
 
 public class Ls extends Command {
 
     @Override
-    public void putArgs(String args) {}
+    public void putArgs(String args) {
+    }
 
     @Override
     public ExecutionResult execute() {

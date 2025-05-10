@@ -1,14 +1,15 @@
 package com.example;
 
+import com.example.command.Command;
+import com.example.command.CommandFactory;
+import com.example.utils.WrongCommandException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.example.command.Command;
-import com.example.command.CommandFactory;
-import com.example.utils.WrongCommandExeption;
 
 public class Parser {
-    public static List<Command> parse(String input) throws WrongCommandExeption{
+    public static List<Command> parse(String input) throws WrongCommandException {
         List<Command> commands = new ArrayList<>();
         String[] lines = input.split(" *\\| *");
         for (String line : lines) {

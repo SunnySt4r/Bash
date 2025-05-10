@@ -6,7 +6,7 @@ import com.example.command.Echo;
 import com.example.command.Exit;
 import com.example.command.Grep;
 import com.example.command.Ls;
-import com.example.utils.WrongCommandExeption;
+import com.example.utils.WrongCommandException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class ParserTest {
 
     @Test
-    void parse_SingleEchoCommand_ReturnsEchoCommand() throws WrongCommandExeption {
+    void parse_SingleEchoCommand_ReturnsEchoCommand() throws WrongCommandException {
         String input = "echo hello world";
         List<Command> commands = Parser.parse(input);
         assertEquals(1, commands.size());
@@ -26,7 +26,7 @@ public class ParserTest {
     }
 
     @Test
-    void parse_SingleExitCommand_ReturnsExitCommand() throws WrongCommandExeption {
+    void parse_SingleExitCommand_ReturnsExitCommand() throws WrongCommandException {
         String input = "exit";
         List<Command> commands = Parser.parse(input);
         assertEquals(1, commands.size());
@@ -34,7 +34,7 @@ public class ParserTest {
     }
 
     @Test
-    void parse_SingleCatCommandWithArguments_ReturnsCatCommandWithArguments() throws WrongCommandExeption {
+    void parse_SingleCatCommandWithArguments_ReturnsCatCommandWithArguments() throws WrongCommandException {
         String input = "cat file1.txt file2.txt";
         List<Command> commands = Parser.parse(input);
         assertEquals(1, commands.size());
@@ -42,7 +42,7 @@ public class ParserTest {
     }
 
     @Test
-    void parse_SingleLsCommand_ReturnsLsCommand() throws WrongCommandExeption {
+    void parse_SingleLsCommand_ReturnsLsCommand() throws WrongCommandException {
         String input = "ls";
         List<Command> commands = Parser.parse(input);
         assertEquals(1, commands.size());
@@ -50,7 +50,7 @@ public class ParserTest {
     }
 
     @Test
-    void parse_SingleGrepCommandWithArguments_ReturnsGrepCommandWithArguments() throws WrongCommandExeption {
+    void parse_SingleGrepCommandWithArguments_ReturnsGrepCommandWithArguments() throws WrongCommandException {
         String input = "grep -i pattern file.txt";
         List<Command> commands = Parser.parse(input);
         assertEquals(1, commands.size());
@@ -58,7 +58,7 @@ public class ParserTest {
     }
 
     @Test
-    void parse_MultipleCommandsWithPipe_ReturnsListOfCommands() throws WrongCommandExeption {
+    void parse_MultipleCommandsWithPipe_ReturnsListOfCommands() throws WrongCommandException {
         String input = "echo hello | grep llo | cat";
         List<Command> commands = Parser.parse(input);
         assertEquals(3, commands.size());
@@ -70,11 +70,11 @@ public class ParserTest {
     @Test
     void parse_UnknownCommand_ThrowsWrongCommandException() {
         String input = "unknown_command arg1 arg2";
-        assertThrows(WrongCommandExeption.class, () -> Parser.parse(input));
+        assertThrows(WrongCommandException.class, () -> Parser.parse(input));
     }
 
     @Test
-    void parse_CommandWithExtraSpaces_ParsesCorrectly() throws WrongCommandExeption {
+    void parse_CommandWithExtraSpaces_ParsesCorrectly() throws WrongCommandException {
         String input = "  echo   hello  world   ";
         List<Command> commands = Parser.parse(input);
         assertEquals(1, commands.size());
@@ -82,7 +82,7 @@ public class ParserTest {
     }
 
     @Test
-    void parse_PipeWithExtraSpaces_ParsesCorrectly() throws WrongCommandExeption {
+    void parse_PipeWithExtraSpaces_ParsesCorrectly() throws WrongCommandException {
         String input = "echo hello |  grep world ";
         List<Command> commands = Parser.parse(input);
         assertEquals(2, commands.size());

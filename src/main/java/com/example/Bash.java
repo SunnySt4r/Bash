@@ -1,15 +1,14 @@
 package com.example;
 
+import com.example.command.Command;
+import com.example.utils.ExecutionResult;
+import com.example.utils.ExitException;
+import com.example.utils.WrongCommandException;
+
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-
-import com.example.command.Command;
-import com.example.utils.ExecutionResult;
-import com.example.utils.ExitExeption;
-import com.example.utils.WrongCommandExeption;
-
 
 public class Bash {
 
@@ -23,14 +22,14 @@ public class Bash {
             List<Command> commands;
             try {
                 commands = Parser.parse(command);
-            } catch (WrongCommandExeption e) {
+            } catch (WrongCommandException e) {
                 System.out.println(e.getMessage());
                 continue;
             }
             ExecutionResult res;
             try {
                 res = ExecutePool.execute(commands);
-            } catch (ExitExeption e) {
+            } catch (ExitException e) {
                 break;
             }
             if (!res.isSuccess()) {

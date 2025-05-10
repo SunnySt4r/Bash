@@ -3,7 +3,7 @@ package com.example.command;
 import com.example.utils.ExecutionResult;
 
 public class Echo extends Command {
-    private String message;
+    private final String message;
 
     public Echo(String[] arguments) {
         this(String.join(" ", arguments));
@@ -20,5 +20,4 @@ public class Echo extends Command {
     @Override
     public void putArgs(String args) {
     }
-    
 }

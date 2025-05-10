@@ -2,7 +2,7 @@ package com.example;
 
 import com.example.command.Command;
 import com.example.utils.ExecutionResult;
-import com.example.utils.ExitExeption;
+import com.example.utils.ExitException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class ExecutePoolTest {
 
     @Test
-    void execute_SingleCommand_ReturnsResultOfCommand() throws ExitExeption {
+    void execute_SingleCommand_ReturnsResultOfCommand() throws ExitException {
         Command mockCommand = mock(Command.class);
         ExecutionResult expectedResult = new ExecutionResult(true, "command output");
         when(mockCommand.execute()).thenReturn(expectedResult);
@@ -29,7 +29,7 @@ public class ExecutePoolTest {
     }
 
     @Test
-    void execute_TwoCommands_SecondCommandReceivesOutputOfFirst() throws ExitExeption {
+    void execute_TwoCommands_SecondCommandReceivesOutputOfFirst() throws ExitException {
         Command mockCommand1 = mock(Command.class);
         ExecutionResult result1 = new ExecutionResult(true, "output from command 1");
         when(mockCommand1.execute()).thenReturn(result1);
@@ -46,16 +46,16 @@ public class ExecutePoolTest {
     }
 
     @Test
-    void execute_CommandThrowsExitException_PropagatesException() throws ExitExeption {
+    void execute_CommandThrowsExitException_PropagatesException() throws ExitException {
         Command mockCommand = mock(Command.class);
-        when(mockCommand.execute()).thenThrow(new ExitExeption("Exit signal"));
+        when(mockCommand.execute()).thenThrow(new ExitException("Exit signal"));
 
         List<Command> commands = Collections.singletonList(mockCommand);
-        assertThrows(ExitExeption.class, () -> ExecutePool.execute(commands));
+        assertThrows(ExitException.class, () -> ExecutePool.execute(commands));
     }
 
     @Test
-    void execute_FirstCommandFails_SecondCommandStillExecuted() throws ExitExeption {
+    void execute_FirstCommandFails_SecondCommandStillExecuted() throws ExitException {
         Command mockCommand1 = mock(Command.class);
         ExecutionResult result1 = new ExecutionResult(false, "error in command 1");
         when(mockCommand1.execute()).thenReturn(result1);
@@ -72,7 +72,7 @@ public class ExecutePoolTest {
     }
 
     @Test
-    void execute_EmptyCommandList_ReturnsNull() throws ExitExeption {
+    void execute_EmptyCommandList_ReturnsNull() throws ExitException {
         List<Command> commands = Collections.emptyList();
         ExecutionResult actualResult = ExecutePool.execute(commands);
         assertNull(actualResult);

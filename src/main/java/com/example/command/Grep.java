@@ -257,7 +257,9 @@ public class Grep extends Command {
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
             Matcher matcher = regexPattern.matcher(line);
-            if (matcher.find()) matchedLines.add(i);
+            if (matcher.find()) {
+                matchedLines.add(i);
+            }
         }
 
         if (matchedLines.isEmpty()) {
@@ -282,15 +284,21 @@ public class Grep extends Command {
 
         for (int i = 0; i < matchedLines.size(); i++) {
             int lineNum = matchedLines.get(i);
-            if (showFilename) result.append(filename).append(":");
+            if (showFilename) {
+                result.append(filename).append(":");
+            }
             result.append(lines.get(lineNum)).append("\n");
 
             if (afterContext > 0) {
                 int end = Math.min(lineNum + afterContext, lines.size() - 1);
 
                 for (int j = lineNum + 1; j <= end; j++) {
-                    if (matchedLines.contains(j)) continue;
-                    if (showFilename) result.append(filename).append("-");
+                    if (matchedLines.contains(j)) {
+                        continue;
+                    }
+                    if (showFilename) {
+                        result.append(filename).append("-");
+                    }
                     result.append(lines.get(j)).append("\n");
                 }
 

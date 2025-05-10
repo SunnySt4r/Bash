@@ -1,8 +1,8 @@
 package com.example.command;
 
 import com.example.utils.ExecutionResult;
-import com.example.utils.ExitExeption;
+import com.example.utils.ExitException;
 
 public interface Executable {
-    public ExecutionResult execute() throws ExitExeption;
+    ExecutionResult execute() throws ExitException;
 }

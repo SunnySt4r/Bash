@@ -1,14 +1,14 @@
 package com.example;
 
-import java.util.List;
-
 import com.example.command.Command;
 import com.example.utils.ExecutionResult;
-import com.example.utils.ExitExeption;
+import com.example.utils.ExitException;
+
+import java.util.List;
 
 public class ExecutePool {
     
-    public static ExecutionResult execute(List<Command> commands) throws ExitExeption {
+    public static ExecutionResult execute(List<Command> commands) throws ExitException {
         ExecutionResult prevResult = null;
         for (Command command : commands) {
             if (prevResult != null) {

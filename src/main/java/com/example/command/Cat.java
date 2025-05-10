@@ -1,15 +1,14 @@
 package com.example.command;
 
-import java.io.File;
-import java.io.FileInputStream;
-
 import com.example.utils.ExecutionResult;
+
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class Cat extends Command {
 
-    private String[] arguments = null;
+    private final String[] arguments;
     private String staticResult = null;
-
 
     public Cat(String[] arguments) {
         this.arguments = arguments;
@@ -26,10 +25,10 @@ public class Cat extends Command {
 
         ExecutionResult result = new ExecutionResult(false, "");
         for (String arg : arguments) {
-            try (FileInputStream stream = new FileInputStream(new File(arg))) {
+            try (FileInputStream stream = new FileInputStream(arg)) {
                 result.setSuccess(true);
                 result.addOutput(new String(stream.readAllBytes()));
-            } catch (Exception e) {
+            } catch (IOException e) {
                 result.addError(arg + ": No such file or directory");
             }
         }
@@ -42,5 +41,4 @@ public class Cat extends Command {
             staticResult = args;
         }
     }
-    
 }
