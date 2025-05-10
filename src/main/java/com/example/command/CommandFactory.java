@@ -7,15 +7,13 @@ public class CommandFactory {
         if (arguments.length == 0) {
             arguments = null;
         }
-        switch (command) {
-            case "echo":
-                return new Echo(arguments);
-            case "exit":
-                return new Exit();
-            case "cat":
-                return new Cat(arguments);
-            default:
-                throw new WrongCommandExeption("Unknown command: " + command);
-        }
+        return switch (command) {
+            case "echo" -> new Echo(arguments);
+            case "exit" -> new Exit();
+            case "cat" -> new Cat(arguments);
+            case "ls" -> new Ls();
+            case "grep" -> new Grep(arguments);
+            default -> throw new WrongCommandExeption("Unknown command: " + command);
+        };
     }
 }

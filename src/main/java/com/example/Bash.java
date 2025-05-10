@@ -15,18 +15,19 @@ public class Bash {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        String name = "";
+        String name = "bash";
+        System.out.printf("|> %s %s%n", name, Date.from(Instant.now()));
         while (true) {
-            System.out.printf("|> ", name, Date.from(Instant.now()));
+            System.out.print("|> ");
             String command = sc.nextLine();
-            List<Command> commands = null;
+            List<Command> commands;
             try {
-                Parser.parse(command);
+                commands = Parser.parse(command);
             } catch (WrongCommandExeption e) {
                 System.out.println(e.getMessage());
                 continue;
             }
-            ExecutionResult res = null;
+            ExecutionResult res;
             try {
                 res = ExecutePool.execute(commands);
             } catch (ExitExeption e) {
@@ -34,8 +35,8 @@ public class Bash {
             }
             if (!res.isSuccess()) {
                 System.out.println(res.getError());
-            }else {
-                System.out.println(res.getOutput() + (res.getError().length() != 0? "\n" + res.getError(): ""));
+            } else {
+                System.out.println(res.getOutput() + (!res.getError().isEmpty() ? "\n" + res.getError() : ""));
             }
         }
         sc.close();
