@@ -11,6 +11,7 @@ public class CommandFactory {
             case "echo" -> new Echo(arguments);
             case "exit" -> new Exit();
             case "cat" -> new Cat(arguments);
+            case "pwd" -> new Pwd();
             case "ls" -> new Ls();
             case "grep" -> new Grep(arguments);
             default -> throw new WrongCommandException("Unknown command: " + command);
