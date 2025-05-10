@@ -103,6 +103,9 @@ public class Grep extends Command {
                             }
                         }
                         break;
+                    default:
+                        exceptionMessage = "grep: invalid option -- '" + option + "'";
+                        return;
                 }
             }
             i++;

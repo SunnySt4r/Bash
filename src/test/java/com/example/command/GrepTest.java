@@ -115,12 +115,20 @@ public class GrepTest {
 
     @Test
     void parseArguments_MultipleOptions() {
-        Grep grep = new Grep(new String[]{"-i -c -icA3", "test", "file.txt"});
+        Grep grep = new Grep(new String[]{"-i", "-c", "-icA3", "test", "file.txt"});
         assertTrue(grep.isIgnoreCase());
         assertTrue(grep.isCountOnly());
         assertEquals(3, grep.getAfterContext());
         assertEquals("test", grep.getPattern());
         assertEquals(List.of("file.txt"), grep.getFiles());
+    }
+
+    @Test
+    void parseArguments_InvalidOption() {
+        Grep grep = new Grep(new String[]{"-p", "test", "file.txt"});
+        assertEquals("grep: invalid option -- 'p'", grep.getExceptionMessage());
+        assertNull(grep.getPattern());
+        assertTrue(grep.getFiles().isEmpty());
     }
 
     @Test
