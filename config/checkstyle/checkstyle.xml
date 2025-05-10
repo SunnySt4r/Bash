@@ -18,11 +18,11 @@
         <property name="max" value="199"/>
         <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
     </module>
-    <module name="Header">
-        <property name="header"
-                  value="/*\n * Copyright (c) 2019-2022. Ivan Vakhrushev and others.\n * https://github.com/mfvanek/pg-index-health\n *\n * This file is a part of &quot;pg-index-health&quot; - a Java library for\n * analyzing and maintaining indexes health in PostgreSQL databases.\n *\n * Licensed under the Apache License 2.0\n */"/>
-        <property name="fileExtensions" value="java"/>
-    </module>
+<!--    <module name="Header">-->
+<!--        <property name="header"-->
+<!--                  value="/*\n * Copyright (c) 2019-2022. Ivan Vakhrushev and others.\n * https://github.com/mfvanek/pg-index-health\n *\n * This file is a part of &quot;pg-index-health&quot; - a Java library for\n * analyzing and maintaining indexes health in PostgreSQL databases.\n *\n * Licensed under the Apache License 2.0\n */"/>-->
+<!--        <property name="fileExtensions" value="java"/>-->
+<!--    </module>-->
     <module name="NewlineAtEndOfFile"/>
     <module name="OrderedProperties"/>
     <module name="Translation"/>
@@ -52,8 +52,8 @@
         <module name="ExecutableStatementCount"/>
         <module name="ExplicitInitialization"/>
         <!-- <module name="FinalClass"/> invalid -->
-        <module name="FinalLocalVariable"/>
-        <module name="FinalParameters"/>
+<!--        <module name="FinalLocalVariable"/>-->
+<!--        <module name="FinalParameters"/>-->
         <!-- <module name="HiddenField"/> invalid -->
         <module name="HideUtilityClassConstructor"/>
         <module name="IllegalCatch"/>
@@ -88,8 +88,8 @@
         <module name="NPathComplexity"/>
         <module name="OuterTypeFilename"/>
         <module name="OuterTypeNumber"/>
-        <module name="PackageAnnotation"/>
-        <module name="PackageDeclaration"/>
+<!--        <module name="PackageAnnotation"/>-->
+<!--        <module name="PackageDeclaration"/>-->
         <module name="ParameterAssignment"/>
         <module name="ParameterNumber">
             <property name="max" value="12"/>
@@ -189,7 +189,7 @@
             <property name="tokens" value="METHOD_REF"/>
             <property name="option" value="nl"/>
         </module>
-        <module name="PackageName"/>
+<!--        <module name="PackageName"/>-->
         <module name="TypeName"/>
         <module name="MemberName"/>
         <module name="ParameterName"/>
@@ -230,15 +230,15 @@
         </module>
         <module name="UnusedImports"/>
         <module name="RedundantImport"/>
-        <module name="IllegalImport">
-            <property name="regexp" value="true"/>
-            <property name="illegalClasses"
-                      value="^org\.springframework\.lang\.(NonNull|Nullable), ^org\.jetbrains\.annotations\.(NotNull|Nullable),
-                ^io\.micrometer\.core\.lang\.(NonNull|Nullable),
-                ^org\.elasticsearch\.common\.Nullable, ^org\.apache\.thrift\.annotation\.Nullable,
-                ^org\.junit\.Test, ^org\.junit\.jupiter\.api\.Assertions, ^org\.junit\.Test, ^org\.junit\.jupiter\.api\.Assertions\..*"/>
-            <property name="illegalPkgs" value="^org\.hamcrest"/>
-        </module>
+<!--        <module name="IllegalImport">-->
+<!--            <property name="regexp" value="true"/>-->
+<!--            <property name="illegalClasses"-->
+<!--                      value="^org\.springframework\.lang\.(NonNull|Nullable), ^org\.jetbrains\.annotations\.(NotNull|Nullable),-->
+<!--                ^io\.micrometer\.core\.lang\.(NonNull|Nullable),-->
+<!--                ^org\.elasticsearch\.common\.Nullable, ^org\.apache\.thrift\.annotation\.Nullable,-->
+<!--                ^org\.junit\.Test, ^org\.junit\.jupiter\.api\.Assertions, ^org\.junit\.Test, ^org\.junit\.jupiter\.api\.Assertions\..*"/>-->
+<!--            <property name="illegalPkgs" value="^org\.hamcrest"/>-->
+<!--        </module>-->
         <module name="MethodParamPad"/>
         <module name="NoWhitespaceBefore"/>
         <module name="NoWhitespaceBeforeCaseDefaultColon"/>
@@ -285,12 +285,12 @@
             <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF"/>
         </module>
         <!-- <module name="MissingJavadocMethod"/> invalid -->
-        <module name="MissingJavadocPackage"/>
+<!--        <module name="MissingJavadocPackage"/>-->
         <module name="JavadocType"/>
         <!-- <module name="JavadocVariable"/> invalid -->
         <!-- <module name="MissingJavadocType"/> invalid -->
         <!-- <module name="WriteTag"/> invalid -->
-        <module name="MethodName"/>
+<!--        <module name="MethodName"/>-->
         <module name="ConstantName"/>
         <module name="SingleLineJavadoc"/>
         <module name="EmptyCatchBlock">

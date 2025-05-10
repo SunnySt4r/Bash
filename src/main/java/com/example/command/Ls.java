@@ -11,7 +11,7 @@ public class Ls extends Command {
     public void putArgs(String args) {}
 
     @Override
-    public ExecutionResult execute() throws ExitExeption {
+    public ExecutionResult execute() {
         String[] command = {"ls"};
         try {
             Process process = Runtime.getRuntime().exec(command);

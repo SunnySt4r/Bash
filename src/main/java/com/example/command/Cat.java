@@ -20,12 +20,8 @@ public class Cat extends Command {
             return new ExecutionResult(true, staticResult);
         }
 
-
         if (arguments == null) {
-            if (staticResult == null) {
-                return new ExecutionResult(false, "cat: missing arguments");
-            }
-            return new ExecutionResult(true, staticResult);
+            return new ExecutionResult(false, "cat: missing arguments");
         }
 
         ExecutionResult result = new ExecutionResult(false, "");
