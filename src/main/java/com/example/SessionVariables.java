@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SessionVariables {
-    private final Map<String, String> variables = new HashMap<>();
     private static final SessionVariables INSTANCE = new SessionVariables();
+    private final Map<String, String> variables = new HashMap<>();
 
-    private SessionVariables() {}
+    private SessionVariables() {
+    }
 
     public static SessionVariables getInstance() {
         return INSTANCE;
@@ -18,6 +19,6 @@ public class SessionVariables {
     }
 
     public String get(String name) {
-        return variables.getOrDefault(name, System.getenv(name)); // эта штука поищет в переменных окружения у операционки, работает даже на винде 
+        return variables.getOrDefault(name, System.getenv(name)); // эта штука поищет в переменных окружения у операционной системы, работает даже на windows
     }
 }

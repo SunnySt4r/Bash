@@ -1,10 +1,10 @@
 package com.example;
 
+import com.example.Token.QuoteType;
+import com.example.command.AssignmentCommand;
 import com.example.command.Command;
 import com.example.command.CommandFactory;
 import com.example.utils.WrongCommandException;
-import com.example.command.AssignmentCommand;
-import com.example.Token.QuoteType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +22,10 @@ public class Parser {
             if (assignMatcher.matches()) {
                 String varName = assignMatcher.group(1);
                 String value = assignMatcher.group(2).trim();
-                if ((value.startsWith("'") && value.endsWith("'"))) {
-                value = value.substring(1, value.length() - 1);
+                if (value.startsWith("'") && value.endsWith("'")) {
+                    value = value.substring(1, value.length() - 1);
                 } else {
-                    if ((value.startsWith("\"") && value.endsWith("\""))) {
+                    if (value.startsWith("\"") && value.endsWith("\"")) {
                         value = value.substring(1, value.length() - 1);
                     }
                     value = replaceVariables(value);
@@ -37,24 +37,19 @@ public class Parser {
             
             List<Token> tokens = splitWithQuotes(part);
 
-            // System.out.println("DEBUG tokens: ");
-            // for (Token t : tokens) {
-            //     System.out.printf("  [%s] '%s'%n", t.getQuoteType(), t.getValue());
-            // }
+            if (tokens.isEmpty()) {
+                continue;
+            }
 
-            if (tokens.isEmpty()) continue;
-
-            Token firstToken = tokens.get(0);
-            String commandValue = firstToken.getValue();
+            Token firstToken = tokens.getFirst();
+            String commandValue = firstToken.value();
             List<Token> argTokens = tokens.subList(1, tokens.size());
             String[] args = processArguments(argTokens);
-
-            // System.out.printf("DEBUG command: %s, args: %s%n", commandValue, Arrays.toString(args));
 
             commands.add(CommandFactory.create(commandValue, args));
         }
         return commands;
-}
+    }
 
     private static List<Token> splitWithQuotes(String input) {
         List<Token> tokens = new ArrayList<>();
@@ -79,35 +74,21 @@ public class Parser {
     }
 
     private static String[] processArguments(List<Token> tokens) {
-        return tokens.stream().map(token -> {
-                switch (token.getQuoteType()) {
-                    case SINGLE:
-                        return token.getValue(); 
-                    case DOUBLE:
-                    case NONE:
-                        return replaceVariables(token.getValue()); 
-                    default:
-                        return token.getValue();
-                }
-            }).toArray(String[]::new);
+        return tokens.stream().map(token -> switch (token.quoteType()) {
+            case DOUBLE, NONE -> replaceVariables(token.value());
+            default -> token.value();
+        }).toArray(String[]::new);
     }
 
     private static String replaceVariables(String input) {
-        Pattern pattern = Pattern.compile("\\$(\\w+|\\{[^}]+\\})");
+        Pattern pattern = Pattern.compile("\\$(\\w+|\\{[^}]+})");
         Matcher matcher = pattern.matcher(input);
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         SessionVariables vars = SessionVariables.getInstance();
         
         while (matcher.find()) {
             String varName = matcher.group(1).replaceAll("[{}]", "");
             String value = vars.get(varName);
-            
-            if (value != null) {
-                // value = value.replace("\\", "\\\\").replace("\"", "\\\"");
-                // if (value.contains(" ")) {
-                //     value = "\"" + value + "\"";
-                // }
-            }
             
             matcher.appendReplacement(sb, value != null ? 
                 Matcher.quoteReplacement(value) : "");
