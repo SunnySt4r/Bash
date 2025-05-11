@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.command.AssignmentCommand;
 import com.example.command.Cat;
 import com.example.command.Command;
 import com.example.command.Echo;
@@ -7,6 +8,7 @@ import com.example.command.Exit;
 import com.example.command.Grep;
 import com.example.command.Ls;
 import com.example.utils.WrongCommandException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -17,12 +19,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ParserTest {
 
+    @BeforeEach
+    void setUp() {
+        // Очистка переменных перед каждым тестом
+        SessionVariables.getInstance().set("MY_VAR", null);
+    }
+
     @Test
     void parse_SingleEchoCommand_ReturnsEchoCommand() throws WrongCommandException {
         String input = "echo hello world";
         List<Command> commands = Parser.parse(input);
         assertEquals(1, commands.size());
         assertInstanceOf(Echo.class, commands.getFirst());
+        Echo echo = (Echo) commands.getFirst();
+        assertEquals("hello world", echo.getMessage());
     }
 
     @Test
@@ -88,5 +98,154 @@ public class ParserTest {
         assertEquals(2, commands.size());
         assertInstanceOf(Echo.class, commands.get(0));
         assertInstanceOf(Grep.class, commands.get(1));
+    }
+
+    @Test
+    void parse_SingleAssignmentWithoutQuotes() throws WrongCommandException {
+        String input = "MY_VAR=hello";
+        List<Command> commands = Parser.parse(input);
+        assertEquals(1, commands.size());
+        assertInstanceOf(AssignmentCommand.class, commands.getFirst());
+        AssignmentCommand assignmentCommand = (AssignmentCommand) commands.getFirst();
+        assignmentCommand.execute();
+        assertEquals("hello", SessionVariables.getInstance().get("MY_VAR"));
+    }
+
+    @Test
+    void parse_SingleAssignmentWithSingleQuotes() throws WrongCommandException {
+        String input = "MY_VAR='hello world'";
+        List<Command> commands = Parser.parse(input);
+        assertEquals(1, commands.size());
+        assertInstanceOf(AssignmentCommand.class, commands.getFirst());
+        AssignmentCommand assignmentCommand = (AssignmentCommand) commands.getFirst();
+        assignmentCommand.execute();
+        assertEquals("hello world", SessionVariables.getInstance().get("MY_VAR"));
+    }
+
+    @Test
+    void parse_SingleAssignmentWithDoubleQuotes() throws WrongCommandException {
+        SessionVariables.getInstance().set("OTHER_VAR", "initial value");
+        String input = "MY_VAR=\"value of $OTHER_VAR\"";
+        List<Command> commands = Parser.parse(input);
+        assertEquals(1, commands.size());
+        assertInstanceOf(AssignmentCommand.class, commands.getFirst());
+        AssignmentCommand assignmentCommand = (AssignmentCommand) commands.getFirst();
+        assignmentCommand.execute();
+        assertEquals("value of initial value", SessionVariables.getInstance().get("MY_VAR"));
+    }
+
+    @Test
+    void parse_AssignmentFollowedByCommand() throws WrongCommandException {
+        String input = "MY_VAR=test | echo $MY_VAR";
+        List<Command> commands = Parser.parse(input);
+        assertEquals(2, commands.size());
+        assertInstanceOf(AssignmentCommand.class, commands.get(0));
+        assertInstanceOf(Echo.class, commands.get(1));
+        AssignmentCommand assignmentCommand = (AssignmentCommand) commands.get(0);
+        assignmentCommand.execute();
+        assertEquals("test", SessionVariables.getInstance().get("MY_VAR"));
+        Echo echo = (Echo) commands.get(1);
+        assertEquals("", echo.getMessage());
+    }
+
+    @Test
+    void parse_CommandFollowedByAssignment() throws WrongCommandException {
+        String input = "echo hello | MY_VAR=world";
+        List<Command> commands = Parser.parse(input);
+        assertEquals(2, commands.size());
+        assertInstanceOf(Echo.class, commands.get(0));
+        assertInstanceOf(AssignmentCommand.class, commands.get(1));
+        AssignmentCommand assignmentCommand = (AssignmentCommand) commands.get(1);
+        assignmentCommand.execute();
+        assertEquals("world", SessionVariables.getInstance().get("MY_VAR"));
+    }
+
+    @Test
+    void parse_CommandWithArgumentsInQuotes() throws WrongCommandException {
+        String input = "echo 'hello world' \"another arg\"";
+        List<Command> commands = Parser.parse(input);
+        assertEquals(1, commands.size());
+        assertInstanceOf(Echo.class, commands.getFirst());
+        Echo echo = (Echo) commands.getFirst();
+        assertEquals("hello world another arg", echo.getMessage());
+    }
+
+    @Test
+    void parse_CommandWithVariableSubstitutionInDoubleQuotes() throws WrongCommandException {
+        SessionVariables.getInstance().set("SUB_VAR", "substituted");
+        String input = "echo \"variable is $SUB_VAR\"";
+        List<Command> commands = Parser.parse(input);
+        assertEquals(1, commands.size());
+        assertInstanceOf(Echo.class, commands.getFirst());
+        Echo echo = (Echo) commands.getFirst();
+        assertEquals("variable is substituted", echo.getMessage());
+    }
+
+    @Test
+    void parse_CommandWithVariableSubstitutionNoQuotes() throws WrongCommandException {
+        SessionVariables.getInstance().set("SUB_VAR", "substituted");
+        String input = "echo variable is $SUB_VAR";
+        List<Command> commands = Parser.parse(input);
+        assertEquals(1, commands.size());
+        assertInstanceOf(Echo.class, commands.getFirst());
+        Echo echo = (Echo) commands.getFirst();
+        assertEquals("variable is substituted", echo.getMessage());
+    }
+
+    @Test
+    void parse_CommandWithNoSubstitutionInSingleQuotes() throws WrongCommandException {
+        SessionVariables.getInstance().set("SUB_VAR", "substituted");
+        String input = "echo 'variable is $SUB_VAR'";
+        List<Command> commands = Parser.parse(input);
+        assertEquals(1, commands.size());
+        assertInstanceOf(Echo.class, commands.getFirst());
+        Echo echo = (Echo) commands.getFirst();
+        assertEquals("variable is $SUB_VAR", echo.getMessage());
+    }
+
+    @Test
+    void parse_CommandWithEscapedPipe() throws WrongCommandException {
+        String input = "echo hello\\|world";
+        List<Command> commands = Parser.parse(input);
+        assertEquals(1, commands.size());
+        assertInstanceOf(Echo.class, commands.getFirst());
+        Echo echo = (Echo) commands.getFirst();
+        assertEquals("hello|world", echo.getMessage());
+    }
+
+    @Test
+    void parse_AssignmentWithVariableInValue() throws WrongCommandException {
+        SessionVariables.getInstance().set("VALUE", "actual_value");
+        String input = "MY_VAR=$VALUE";
+        List<Command> commands = Parser.parse(input);
+        assertEquals(1, commands.size());
+        assertInstanceOf(AssignmentCommand.class, commands.getFirst());
+        AssignmentCommand assignmentCommand = (AssignmentCommand) commands.getFirst();
+        assignmentCommand.execute();
+        assertEquals("actual_value", SessionVariables.getInstance().get("MY_VAR"));
+    }
+
+    @Test
+    void parse_AssignmentWithVariableInDoubleQuotedValue() throws WrongCommandException {
+        SessionVariables.getInstance().set("VALUE", "quoted value");
+        String input = "MY_VAR=\"prefix $VALUE suffix\"";
+        List<Command> commands = Parser.parse(input);
+        assertEquals(1, commands.size());
+        assertInstanceOf(AssignmentCommand.class, commands.getFirst());
+        AssignmentCommand assignmentCommand = (AssignmentCommand) commands.getFirst();
+        assignmentCommand.execute();
+        assertEquals("prefix quoted value suffix", SessionVariables.getInstance().get("MY_VAR"));
+    }
+
+    @Test
+    void parse_AssignmentWithVariableInSingleQuotedValue() throws WrongCommandException {
+        SessionVariables.getInstance().set("VALUE", "will not be substituted");
+        String input = "MY_VAR='$VALUE'";
+        List<Command> commands = Parser.parse(input);
+        assertEquals(1, commands.size());
+        assertInstanceOf(AssignmentCommand.class, commands.getFirst());
+        AssignmentCommand assignmentCommand = (AssignmentCommand) commands.getFirst();
+        assignmentCommand.execute();
+        assertEquals("$VALUE", SessionVariables.getInstance().get("MY_VAR"));
     }
 }
