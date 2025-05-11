@@ -13,6 +13,7 @@ public class CommandFactory {
             case "cat" -> new Cat(arguments);
             case "pwd" -> new Pwd();
             case "ls" -> new Ls();
+            case "wc" -> new Wc(arguments);
             case "grep" -> new Grep(arguments);
             default -> throw new WrongCommandException("Unknown command: " + command);
         };

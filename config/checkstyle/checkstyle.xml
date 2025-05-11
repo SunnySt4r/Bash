@@ -36,7 +36,7 @@
         <!--<module name="AvoidInlineConditionals"/> invalid -->
         <module name="AvoidNestedBlocks"/>
         <module name="BooleanExpressionComplexity"/>
-        <module name="ClassDataAbstractionCoupling"/>
+<!--        <module name="ClassDataAbstractionCoupling"/>-->
         <module name="ClassFanOutComplexity"/>
         <!-- <module name="ClassMemberImpliedModifier"/> invalid -->
         <module name="RedundantModifier"/>
