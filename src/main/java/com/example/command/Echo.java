@@ -5,16 +5,16 @@ import com.example.utils.ExecutionResult;
 public class Echo extends Command {
     private final String message;
 
-    public String getMessage() {
-        return message;
-    }
-
     public Echo(String[] arguments) {
         this(String.join(" ", arguments));
     }
 
     public Echo(String message) {
         this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public ExecutionResult execute() {
