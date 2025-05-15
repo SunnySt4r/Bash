@@ -13,6 +13,8 @@ import java.util.Scanner;
 public class Bash {
 
     public static void main(String[] args) {
+        SessionVariables.getInstance().set("PWD", System.getProperty("user.dir"));
+
         Scanner sc = new Scanner(System.in);
         String name = "bash";
         System.out.printf("|> %s %s%n", name, Date.from(Instant.now()));

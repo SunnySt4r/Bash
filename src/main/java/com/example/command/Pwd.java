@@ -1,15 +1,17 @@
 package com.example.command;
 
+import com.example.SessionVariables;
 import com.example.utils.ExecutionResult;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Pwd extends Command {
     @Override
     public ExecutionResult execute() {
-        Path currentDirectory = Paths.get("").toAbsolutePath();
-        return new ExecutionResult(true, currentDirectory.toString());
+        String currentDirectory = SessionVariables.getInstance().get("PWD");
+        if (currentDirectory == null) {
+            currentDirectory = System.getProperty("user.dir");
+            SessionVariables.getInstance().set("PWD", currentDirectory);
+        }
+        return new ExecutionResult(true, currentDirectory);
     }
 
     @Override
