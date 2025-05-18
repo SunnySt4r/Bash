@@ -30,7 +30,8 @@ public class Ls extends Command {
     public void putArgs(String args) {
         directories = new ArrayList<>();
         if (args != null && !args.trim().isEmpty()) {
-            directories.add(args.trim());
+            String[] parts = args.trim().split("\\s+");
+            directories.addAll(Arrays.asList(parts));
         } else {
             directories.add(".");
         }
