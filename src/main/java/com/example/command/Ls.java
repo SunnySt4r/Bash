@@ -30,8 +30,7 @@ public class Ls extends Command {
     public void putArgs(String args) {
         directories = new ArrayList<>();
         if (args != null && !args.trim().isEmpty()) {
-            String[] parts = args.trim().split("\\s+");
-            directories.addAll(Arrays.asList(parts));
+            directories.add(args.trim());
         } else {
             directories.add(".");
         }
@@ -73,24 +72,32 @@ public class Ls extends Command {
             File dir = new File(targetDir);
 
             if (!dir.exists()) {
-                finalOutput.append("ls: cannot access '").append(directory).append("': No such file or directory\n");
+                if (i > 0) {
+                    finalOutput.append("\n");
+                }
+                finalOutput.append("ls: cannot access '").append(directory).append("': No such file or directory");
                 success = false;
                 continue;
             }
 
             if (!dir.isDirectory()) {
-                finalOutput.append(directory).append("\n");
+                if (i > 0) {
+                    finalOutput.append("\n");
+                }
+                finalOutput.append(directory);
                 continue;
             }
 
             File[] files = dir.listFiles();
             if (files == null) {
-                finalOutput.append("ls: cannot open directory '").append(directory).append("'\n");
+                if (i > 0) {
+                    finalOutput.append("\n");
+                }
+                finalOutput.append("ls: cannot open directory '").append(directory).append("'");
                 success = false;
                 continue;
             }
 
-            // Show directory name when multiple directories
             if (showDirNames) {
                 if (i > 0) {
                     finalOutput.append("\n");
@@ -98,24 +105,22 @@ public class Ls extends Command {
                 finalOutput.append(directory).append(":\n");
             }
 
-            // Sort files
             Arrays.sort(files);
 
             StringBuilder output = new StringBuilder();
             for (File file : files) {
-                if (!file.getName().startsWith(".")) { // Skip hidden files
+                if (!file.getName().startsWith(".")) {
                     output.append(file.getName()).append("\n");
                 }
             }
 
             String result = output.toString();
             if (!result.isEmpty()) {
-                result = result.substring(0, result.length() - 1); // Remove last newline
+                result = result.substring(0, result.length() - 1);
             }
 
             finalOutput.append(result);
 
-            // Add newline between directories if not the last one
             if (i < directories.size() - 1 && !result.isEmpty()) {
                 finalOutput.append("\n");
             }
