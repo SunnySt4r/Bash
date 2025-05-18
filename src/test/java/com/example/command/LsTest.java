@@ -133,7 +133,7 @@ public class LsTest {
     }
 
     @Test
-    void putArgs_MultipleFiles() {
+    void execute_MultipleFiles() {
         String args[] = {"src/test/testsForFolderLookup/a_first.file.txt", "src/test/testsForFolderLookup/visible_file.txt"};
         Ls lsCommand = new Ls(args);
         ExecutionResult result = lsCommand.execute();
@@ -147,7 +147,7 @@ public class LsTest {
     }
 
     @Test
-    void putArgs_FilesAndDirectory() {
+    void execute_FilesAndDirectory() {
         String args[] = {"src/test/testsForFolderLookup/a_first.file.txt", "src/test/testsForFolderLookup/folder"};
         Ls lsCommand = new Ls(args);
         ExecutionResult result = lsCommand.execute();
@@ -163,7 +163,7 @@ public class LsTest {
     }
 
     @Test
-    void putArgs_ErrorAndFiles() {
+    void execute_ErrorAndFiles() {
         String args[] = {"bruh", "src/test/testsForFolderLookup/a_first.file.txt"};
         Ls lsCommand = new Ls(args);
         ExecutionResult result = lsCommand.execute();
