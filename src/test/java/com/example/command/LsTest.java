@@ -22,7 +22,7 @@ public class LsTest {
 
     @Test
     void execute_LsWithArguments() {
-        String args[] = {"src/test/testsForFolderLookup"};
+        String args[] = { "src/test/testsForFolderLookup" };
         Ls lsCommand = new Ls(args);
         ExecutionResult result = lsCommand.execute();
         assertTrue(result.isSuccess());
@@ -37,10 +37,10 @@ public class LsTest {
     @Test
     void putArgs_FailsWhenIncorrectDataPassed() {
         Ls lsCommand = new Ls();
-        lsCommand.putArgs("some input from pipe");
+        lsCommand.putArgs("bruh");
         ExecutionResult result = lsCommand.execute();
         assertFalse(result.isSuccess());
-        assertEquals("ls: cannot access '" + "some input from pipe" + "': No such file or directory", result.getError());
+        assertEquals("ls: cannot access '" + "bruh" + "': No such file or directory", result.getError());
     }
 
     @Test
@@ -77,6 +77,5 @@ public class LsTest {
         assertFalse(result.getOutput().isEmpty());
         assertEquals("", result.getError());
     }
-
 
 }
