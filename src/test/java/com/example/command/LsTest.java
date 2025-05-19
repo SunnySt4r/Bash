@@ -2,18 +2,8 @@ package com.example.command;
 
 import com.example.SessionVariables;
 import com.example.utils.ExecutionResult;
-import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.junit.jupiter.api.condition.OS;
-import org.junit.jupiter.api.io.TempDir;
-
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,7 +38,6 @@ public class LsTest {
 
     @Test
     void execute_IfSomehowDirectoriesAreNotSet() {
-        String[] args = {};
         Ls lsCommand = new Ls();
         lsCommand.clearDirectories();
         ExecutionResult result = lsCommand.execute();
