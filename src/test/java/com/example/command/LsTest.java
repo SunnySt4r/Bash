@@ -1,8 +1,18 @@
 package com.example.command;
 
+import com.example.SessionVariables;
 import com.example.utils.ExecutionResult;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -13,6 +23,31 @@ public class LsTest {
     @Test
     void execute_NoArguments_ListsFilesInCurrentDirectory() {
         Ls lsCommand = new Ls();
+        ExecutionResult result = lsCommand.execute();
+        assertTrue(result.isSuccess());
+        assertFalse(result.getOutput().isEmpty());
+        assertTrue(result.getOutput().contains("pom.xml"));
+        assertTrue(result.getOutput().contains("src"));
+        assertEquals("", result.getError());
+    }
+
+    @Test
+    void execute_EmptyList_ListsFilesInCurrentDirectory() {
+        String[] args = {};
+        Ls lsCommand = new Ls(args);
+        ExecutionResult result = lsCommand.execute();
+        assertTrue(result.isSuccess());
+        assertFalse(result.getOutput().isEmpty());
+        assertTrue(result.getOutput().contains("pom.xml"));
+        assertTrue(result.getOutput().contains("src"));
+        assertEquals("", result.getError());
+    }
+
+    @Test
+    void execute_IfSomehowDirectoriesAreNotSet() {
+        String[] args = {};
+        Ls lsCommand = new Ls();
+        lsCommand.clearDirectories();
         ExecutionResult result = lsCommand.execute();
         assertTrue(result.isSuccess());
         assertFalse(result.getOutput().isEmpty());
@@ -57,6 +92,18 @@ public class LsTest {
     }
 
     @Test
+    void putArgs_GetIfEmptyInput() {
+        Ls lsCommand = new Ls();
+        lsCommand.putArgs("");
+        ExecutionResult result = lsCommand.execute();
+        assertTrue(result.isSuccess());
+        assertFalse(result.getOutput().isEmpty());
+        assertTrue(result.getOutput().contains("pom.xml"));
+        assertTrue(result.getOutput().contains("src"));
+        assertEquals("", result.getError());
+    }
+
+    @Test
     void putArgs_GetIfNotDirectory() {
         Ls lsCommand = new Ls();
         lsCommand.putArgs("src/test/testsForFolderLookup/visible_file.txt");
@@ -75,6 +122,37 @@ public class LsTest {
         assertTrue(result.isSuccess());
         assertFalse(result.getOutput().isEmpty());
         assertEquals("", result.getError());
+
+        File home = new File(System.getProperty("user.home"));
+        List<String> realFiles = Arrays.asList(home.list());
+
+        if (!realFiles.isEmpty()) {
+            for (String file : realFiles) {
+                if(file.startsWith(".")) continue;
+                assertTrue(result.getOutput().contains(file));
+            }
+        }
+    }
+
+
+    @Test
+    void putArgs_GetHomeAndMore() {
+        Ls lsCommand = new Ls();
+        lsCommand.putArgs("~/");
+        ExecutionResult result = lsCommand.execute();
+        assertTrue(result.isSuccess());
+        assertFalse(result.getOutput().isEmpty());
+        assertEquals("", result.getError());
+
+        File home = new File(System.getProperty("user.home"));
+        List<String> realFiles = Arrays.asList(home.list());
+
+        if (!realFiles.isEmpty()) {
+            for (String file : realFiles) {
+                if(file.startsWith(".")) continue;
+                assertTrue(result.getOutput().contains(file));
+            }
+        }
     }
 
     @Test
@@ -173,6 +251,57 @@ public class LsTest {
                 "ls: cannot access '" + "bruh" + "': No such file or directory\n" +
                 "src/test/testsForFolderLookup/a_first.file.txt";
         assertEquals(ans, result.getError());
+    }
+
+    @Test
+    void execute_FilesAndErrors() {
+        String args[] = {"src/test/testsForFolderLookup/a_first.file.txt", "src/test/testsForFolderLookup/a_first.file.txt", "bruh"};
+        Ls lsCommand = new Ls(args);
+        ExecutionResult result = lsCommand.execute();
+        assertFalse(result.isSuccess());
+        assertTrue(result.getOutput().isEmpty());
+        String ans =
+                        "src/test/testsForFolderLookup/a_first.file.txt\n" +
+                        "src/test/testsForFolderLookup/a_first.file.txt\n" +
+                    "ls: cannot access '" + "bruh" + "': No such file or directory";
+        assertEquals(ans, result.getError());
+    }
+
+    @Test
+    void execute_ErrorReadingDirectory() {
+        String args[] = {"src/test/testsForFolderLookup/a_first.file.txt", "...", "bruh"};
+        Ls lsCommand = new Ls(args);
+        ExecutionResult result = lsCommand.execute();
+        assertFalse(result.isSuccess());
+        assertTrue(result.getOutput().isEmpty());
+        String ans =
+                "src/test/testsForFolderLookup/a_first.file.txt\n" +
+                        "ls: cannot open directory '...'\n" +
+                        "ls: cannot access '" + "bruh" + "': No such file or directory";
+        assertEquals(ans, result.getError());
+    }
+
+    @Test
+    void putArgs_FailsWhenCantReadFile() {
+        Ls lsCommand = new Ls();
+        lsCommand.putArgs("...");
+        ExecutionResult result = lsCommand.execute();
+        assertFalse(result.isSuccess());
+        assertEquals("ls: cannot open directory '...'", result.getError());
+    }
+
+    @Test
+    void execute_pwdIsNull() {
+        SessionVariables.getInstance().set("PWD", null);
+        String args[] = {"src/test/testsForFolderLookup/visible_file.txt"};
+        Ls lsCommand = new Ls(args);
+        ExecutionResult result = lsCommand.execute();
+        assertTrue(result.isSuccess());
+        assertFalse(result.getOutput().isEmpty());
+        String ans = "src/test/testsForFolderLookup/visible_file.txt";
+        assertEquals(ans, result.getOutput());
+        assertEquals("", result.getError());
+        SessionVariables.getInstance().set("PWD", System.getProperty("user.dir"));
     }
 
 }

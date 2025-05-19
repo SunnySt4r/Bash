@@ -130,4 +130,9 @@ public class Ls extends Command {
         String result = finalOutput.toString();
         return new ExecutionResult(success, result);
     }
+
+    void clearDirectories() {
+        directories.clear();
+    }
+
 }
