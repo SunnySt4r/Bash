@@ -22,17 +22,15 @@ public class Bash {
             System.out.print("|> ");
             String command = sc.nextLine();
             List<Command> commands;
-            try {
-                commands = Parser.parse(command);
-            } catch (WrongCommandException e) {
-                System.out.println(e.getMessage());
-                continue;
-            }
+            commands = Parser.parse(command);
             ExecutionResult res;
             try {
                 res = ExecutePool.execute(commands);
             } catch (ExitException e) {
                 break;
+            } catch (WrongCommandException e) {
+                System.out.println(e.getMessage());
+                continue;
             }
             if (!res.isSuccess()) {
                 System.out.println(res.getError());

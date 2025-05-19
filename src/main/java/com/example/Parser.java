@@ -4,7 +4,6 @@ import com.example.Token.QuoteType;
 import com.example.command.AssignmentCommand;
 import com.example.command.Command;
 import com.example.command.CommandFactory;
-import com.example.utils.WrongCommandException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-    public static List<Command> parse(String input) throws WrongCommandException {
+    public static List<Command> parse(String input) {
         List<Command> commands = new ArrayList<>();
         String[] pipelineParts = input.split("(?<!\\\\)\\|");
 

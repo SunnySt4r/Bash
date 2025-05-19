@@ -179,16 +179,6 @@
                       <value>MISSEDCOUNT</value>
                       <maximum>0</maximum>
                     </limit>
-                    <limit>
-                      <counter>METHOD</counter>
-                      <value>MISSEDCOUNT</value>
-                      <maximum>4</maximum>
-                    </limit>
-                    <limit>
-                      <counter>LINE</counter>
-                      <value>MISSEDCOUNT</value>
-                      <maximum>35</maximum>
-                    </limit>
                   </limits>
                 </rule>
               </rules>
