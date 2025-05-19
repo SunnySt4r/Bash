@@ -95,12 +95,9 @@ public class CdTest {
         Cd cdCommand = new Cd(args);
         ExecutionResult result = cdCommand.execute();
 
-        String expectedDir = getExpectedDirectory(args[0]);
-        String actualDir = getActualDirectory();
-
-        assertTrue(result.isSuccess());
-        assertEquals("", result.getError());
-        assertEquals(expectedDir, actualDir);
+        assertFalse(result.isSuccess());
+        assertEquals("", result.getOutput());
+        assertEquals(result.getError(), "cd: too many arguments");
     }
 
     @Test

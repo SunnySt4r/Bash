@@ -14,7 +14,11 @@ public class Cd extends Command {
 
     public Cd(String[] args) {
         if (args != null && args.length > 0) {
-            directory = args[0];
+            if (args.length > 1) {
+                directory = null;
+            } else {
+                directory = args[0];
+            }
         }
     }
 
@@ -27,6 +31,9 @@ public class Cd extends Command {
 
     @Override
     public ExecutionResult execute() {
+        if (directory == null) {
+            return new ExecutionResult(false, "cd: too many arguments");
+        }
         SessionVariables sessionVars = SessionVariables.getInstance();
         String targetDir = directory;
 
