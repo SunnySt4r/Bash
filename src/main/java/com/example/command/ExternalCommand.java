@@ -6,24 +6,25 @@ import com.example.utils.WrongCommandException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.List;
 
 public class ExternalCommand extends Command {
 
     private final String command;
-    private final List<String> arguments;
+    private final String[] arguments;
 
-    public ExternalCommand(String command, String[] args) {
+    public ExternalCommand(String command, String[] arguments) {
         this.command = command;
-        this.arguments = Arrays.asList(args);
+        this.arguments = arguments;
     }
 
     @Override
     public ExecutionResult execute() {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command);
-            processBuilder.command().addAll(arguments);
+            if (arguments != null) {
+                processBuilder.command().addAll(List.of(arguments));
+            }
             Process process = processBuilder.start();
 
             StringBuilder output = new StringBuilder();
