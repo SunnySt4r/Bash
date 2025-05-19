@@ -16,31 +16,32 @@
     <maven.compiler.target>21</maven.compiler.target>
     <checkstyle.config.location>config/checkstyle/checkstyle.xml</checkstyle.config.location>
     <mockito.version>5.17.0</mockito.version>
+    <junit.version>5.11.4</junit.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.11.4</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.11.4</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>5.17.0</version>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>5.17.0</version>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -72,6 +73,17 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+        <configuration>
+          <includes>
+            <include>**/*Test.java</include>
+          </includes>
+        </configuration>
       </plugin>
 
       <plugin>
@@ -167,16 +179,16 @@
                       <value>MISSEDCOUNT</value>
                       <maximum>0</maximum>
                     </limit>
-<!--                    <limit>-->
-<!--                      <counter>METHOD</counter>-->
-<!--                      <value>MISSEDCOUNT</value>-->
-<!--                      <maximum>0</maximum>-->
-<!--                    </limit>-->
-<!--                    <limit>-->
-<!--                      <counter>LINE</counter>-->
-<!--                      <value>MISSEDCOUNT</value>-->
-<!--                      <maximum>0</maximum>-->
-<!--                    </limit>-->
+                    <limit>
+                      <counter>METHOD</counter>
+                      <value>MISSEDCOUNT</value>
+                      <maximum>4</maximum>
+                    </limit>
+                    <limit>
+                      <counter>LINE</counter>
+                      <value>MISSEDCOUNT</value>
+                      <maximum>30</maximum>
+                    </limit>
                   </limits>
                 </rule>
               </rules>
