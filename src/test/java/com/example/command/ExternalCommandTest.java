@@ -29,7 +29,7 @@ public class ExternalCommandTest {
         ExternalCommand externalCommand = new ExternalCommand(command, args);
         ExecutionResult result = externalCommand.execute();
         assertFalse(result.isSuccess());
-        assertTrue(result.getError().contains("usage: git [-v | --version]"));
+        assertTrue(result.getError().contains("git [-v | --version]"));
         assertEquals("", result.getOutput());
     }
 

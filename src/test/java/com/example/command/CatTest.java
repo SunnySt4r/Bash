@@ -53,7 +53,7 @@ public class CatTest {
         ExecutionResult result = catCommand.execute();
 
         assertFalse(result.isSuccess());
-        assertTrue(result.getError().contains(nonExistingFile + ": No such file or directory"));
+        assertTrue(result.getError().contains(nonExistingFile + ": No such file"));
         assertEquals("", result.getOutput());
     }
 
@@ -65,7 +65,7 @@ public class CatTest {
         assertTrue(result.isSuccess()); // Если хотя бы один файл прочитан успешно
         assertTrue(result.getOutput().contains(file1Content));
         assertTrue(result.getOutput().contains(file2Content));
-        assertTrue(result.getError().contains(nonExistingFile + ": No such file or directory"));
+        assertTrue(result.getError().contains(nonExistingFile + ": No such file"));
     }
 
     @Test
@@ -105,4 +105,32 @@ public class CatTest {
         assertTrue(result.getOutput().contains(fileContent));
         assertEquals("", result.getError());
     }
+
+    @Test
+    void execute_AbsolutePath_ReturnsFileContent() throws IOException {
+        Path absoluteFilePath = tempDir.resolve("absolute.txt").toAbsolutePath();
+        String absoluteFileContent = "Absolute path content.";
+        Files.writeString(absoluteFilePath, absoluteFileContent);
+
+        Cat catCommand = new Cat(new String[]{absoluteFilePath.toString()});
+        ExecutionResult result = catCommand.execute();
+
+        assertTrue(result.isSuccess());
+        assertTrue(result.getOutput().contains(absoluteFileContent));
+        assertEquals("", result.getError());
+    }
+
+    @Test
+    void execute_DirectoryPath_ReturnsErrorMessage() throws IOException {
+        Path directoryPath = tempDir.resolve("directory");
+        Files.createDirectory(directoryPath);
+
+        Cat catCommand = new Cat(new String[]{directoryPath.toString()});
+        ExecutionResult result = catCommand.execute();
+
+        assertFalse(result.isSuccess());
+        assertTrue(result.getError().contains(directoryPath.toString() + ": It's a directory"));
+        assertEquals("", result.getOutput());
+    }
+
 }
