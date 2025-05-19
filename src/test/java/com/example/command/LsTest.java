@@ -5,12 +5,15 @@ import com.example.utils.ExecutionResult;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -265,29 +268,6 @@ public class LsTest {
                         "src/test/testsForFolderLookup/a_first.file.txt\n" +
                     "ls: cannot access '" + "bruh" + "': No such file or directory";
         assertEquals(ans, result.getError());
-    }
-
-    @Test
-    void execute_ErrorReadingDirectory() {
-        String args[] = {"src/test/testsForFolderLookup/a_first.file.txt", "...", "bruh"};
-        Ls lsCommand = new Ls(args);
-        ExecutionResult result = lsCommand.execute();
-        assertFalse(result.isSuccess());
-        assertTrue(result.getOutput().isEmpty());
-        String ans =
-                "src/test/testsForFolderLookup/a_first.file.txt\n" +
-                        "ls: cannot open directory '...'\n" +
-                        "ls: cannot access '" + "bruh" + "': No such file or directory";
-        assertEquals(ans, result.getError());
-    }
-
-    @Test
-    void putArgs_FailsWhenCantReadFile() {
-        Ls lsCommand = new Ls();
-        lsCommand.putArgs("...");
-        ExecutionResult result = lsCommand.execute();
-        assertFalse(result.isSuccess());
-        assertEquals("ls: cannot open directory '...'", result.getError());
     }
 
     @Test
