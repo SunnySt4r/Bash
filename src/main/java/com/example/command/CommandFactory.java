@@ -1,9 +1,7 @@
 package com.example.command;
 
-import com.example.utils.WrongCommandExeption;
-
 public class CommandFactory {
-    public static Command create(String command, String[] arguments) throws WrongCommandExeption{
+    public static Command create(String command, String[] arguments) {
         if (arguments.length == 0) {
             arguments = null;
         }
@@ -11,9 +9,12 @@ public class CommandFactory {
             case "echo" -> new Echo(arguments);
             case "exit" -> new Exit();
             case "cat" -> new Cat(arguments);
-            case "ls" -> new Ls();
+            case "pwd" -> new Pwd();
+            case "ls" -> new Ls(arguments);
+            case "cd" -> new Cd(arguments);
+            case "wc" -> new Wc(arguments);
             case "grep" -> new Grep(arguments);
-            default -> throw new WrongCommandExeption("Unknown command: " + command);
+            default -> new ExternalCommand(command, arguments);
         };
     }
 }

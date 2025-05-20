@@ -28,6 +28,38 @@ public class Grep extends Command {
         parseArguments();
     }
 
+    public boolean isIgnoreCase() {
+        return ignoreCase;
+    }
+
+    public boolean isCountOnly() {
+        return countOnly;
+    }
+
+    public boolean isFileNamesOnly() {
+        return fileNamesOnly;
+    }
+
+    public boolean isWholeWord() {
+        return wholeWord;
+    }
+
+    public int getAfterContext() {
+        return afterContext;
+    }
+
+    public String getPattern() {
+        return pattern;
+    }
+
+    public List<String> getFiles() {
+        return new ArrayList<>(files);
+    }
+
+    public String getExceptionMessage() {
+        return exceptionMessage;
+    }
+
     private void parseArguments() {
         if (arguments == null || arguments.length == 0) {
             return;
@@ -83,6 +115,9 @@ public class Grep extends Command {
                             return;
                         }
                         break;
+                    default:
+                        exceptionMessage = "grep: invalid option -- '" + option + "'";
+                        return;
                 }
             }
             i++;
@@ -229,7 +264,9 @@ public class Grep extends Command {
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
             Matcher matcher = regexPattern.matcher(line);
-            if (matcher.find()) matchedLines.add(i);
+            if (matcher.find()) {
+                matchedLines.add(i);
+            }
         }
 
         if (matchedLines.isEmpty()) {
@@ -254,15 +291,21 @@ public class Grep extends Command {
 
         for (int i = 0; i < matchedLines.size(); i++) {
             int lineNum = matchedLines.get(i);
-            if (showFilename) result.append(filename).append(":");
+            if (showFilename) {
+                result.append(filename).append(":");
+            }
             result.append(lines.get(lineNum)).append("\n");
 
             if (afterContext > 0) {
                 int end = Math.min(lineNum + afterContext, lines.size() - 1);
 
                 for (int j = lineNum + 1; j <= end; j++) {
-                    if (matchedLines.contains(j)) continue;
-                    if (showFilename) result.append(filename).append("-");
+                    if (matchedLines.contains(j)) {
+                        continue;
+                    }
+                    if (showFilename) {
+                        result.append(filename).append("-");
+                    }
                     result.append(lines.get(j)).append("\n");
                 }
 
