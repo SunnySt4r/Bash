@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -87,7 +86,12 @@ public class Grep extends Command {
                     case 'A':
                         if (j + 1 < arg.length()) {
                             try {
-                                afterContext = Integer.parseInt(arg.substring(j + 1));
+                                int contextValue = Integer.parseInt(arg.substring(j + 1));
+                                if (contextValue < 0) {
+                                    exceptionMessage = "grep: " + contextValue + ": invalid context length argument";
+                                    return;
+                                }
+                                afterContext = contextValue;
                                 j = arg.length();
                             } catch (NumberFormatException e) {
                                 exceptionMessage = e.getMessage();
@@ -95,12 +99,20 @@ public class Grep extends Command {
                             }
                         } else if (i + 1 < arguments.length) {
                             try {
-                                afterContext = Integer.parseInt(arguments[i + 1]);
+                                int contextValue = Integer.parseInt(arguments[i + 1]);
+                                if (contextValue < 0) {
+                                    exceptionMessage = "grep: " + contextValue + ": invalid context length argument";
+                                    return;
+                                }
+                                afterContext = contextValue;
                                 i++;
                             } catch (NumberFormatException e) {
                                 exceptionMessage = e.getMessage();
                                 return;
                             }
+                        } else {
+                            exceptionMessage = "grep: option requires an argument -- 'A'";
+                            return;
                         }
                         break;
                     default:
@@ -133,11 +145,6 @@ public class Grep extends Command {
 
         if (pattern == null && pipeInput == null) {
             return new ExecutionResult(false, "grep: missing pattern");
-        }
-
-        if (pipeInput != null && pattern == null && arguments != null && arguments.length > 0) {
-            pattern = arguments[0];
-            files.addAll(Arrays.asList(arguments).subList(1, arguments.length));
         }
 
         if (pipeInput != null && files.isEmpty()) {
@@ -211,7 +218,7 @@ public class Grep extends Command {
 
             try {
                 List<String> lines = Files.readAllLines(Paths.get(filePath));
-                ExecutionResult result = grepList(lines, pattern, multipleFiles ? filePath : null);
+                ExecutionResult result = grepList(lines, pattern, multipleFiles || fileNamesOnly ? filePath : null);
 
                 if (result.isSuccess() && !result.getOutput().isEmpty()) {
                     if (!output.isEmpty() && output.charAt(output.length() - 1) != '\n') {
