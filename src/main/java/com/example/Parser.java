@@ -41,7 +41,7 @@ public class Parser {
             }
 
             Token firstToken = tokens.getFirst();
-            String commandValue = firstToken.value();
+            String commandValue = replaceVariables(firstToken.value());
             List<Token> argTokens = tokens.subList(1, tokens.size());
             String[] args = processArguments(argTokens);
 
