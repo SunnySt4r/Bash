@@ -1,5 +1,6 @@
 package com.example.command;
 
+import com.example.SessionVariables;
 import com.example.utils.ExecutionResult;
 import com.example.utils.WrongCommandException;
 import org.junit.jupiter.api.Test;
@@ -50,5 +51,27 @@ public class ExternalCommandTest {
         String[] args = {};
         ExternalCommand externalCommand = new ExternalCommand(command, args);
         assertThrows(WrongCommandException.class, externalCommand::execute);
+    }
+
+    @Test
+    void execute_externalCommand_respectsWorkingDirectory() {
+        SessionVariables sessionVars = SessionVariables.getInstance();
+        String originalPwd = sessionVars.get("PWD");
+        
+        String testDir = "/tmp";
+        sessionVars.set("PWD", testDir);
+        
+        try {
+            String command = "pwd";
+            ExternalCommand externalCommand = new ExternalCommand(command, null);
+            ExecutionResult result = externalCommand.execute();
+            
+            assertTrue(result.isSuccess());
+            assertEquals(testDir, result.getOutput());
+        } finally {
+            if (originalPwd != null) {
+                sessionVars.set("PWD", originalPwd);
+            }
+        }
     }
 }

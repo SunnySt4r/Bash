@@ -1,9 +1,11 @@
 package com.example.command;
 
+import com.example.SessionVariables;
 import com.example.utils.ExecutionResult;
 import com.example.utils.WrongCommandException;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -25,6 +27,13 @@ public class ExternalCommand extends Command {
             if (arguments != null) {
                 processBuilder.command().addAll(List.of(arguments));
             }
+            
+            SessionVariables sessionVars = SessionVariables.getInstance();
+            String currentDir = sessionVars.get("PWD");
+            if (currentDir != null) {
+                processBuilder.directory(new File(currentDir));
+            }
+            
             Process process = processBuilder.start();
 
             StringBuilder output = new StringBuilder();
